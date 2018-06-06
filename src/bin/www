@@ -8,6 +8,10 @@ var app = require('../app')
 var debug = require('debug')('server:server')
 var http = require('http')
 
+const db = require('../models')
+const repositories = require('../repositories')(db)
+const services = require('../services')(repositories)
+
 /**
  * Get port from environment and store in Express.
  */
@@ -27,7 +31,7 @@ var server = http.createServer(app)
 
 server.listen(port)
 const io = require('socket.io').listen(server)
-require('../sockets/base')(io)
+app.use('/', require('../http')(services, repositories, io))
 server.on('error', onError)
 server.on('listening', onListening)
 

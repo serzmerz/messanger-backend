@@ -9,10 +9,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const errorHandler = require('./middlewares/errorHandler')
 const jwt = require('./middlewares/jwt')
-// const fileUpload = require('express-fileupload')
-const db = require('./models')
-const repositories = require('./repositories')(db)
-const services = require('./services')(repositories)
 
 const app = express()
 
@@ -25,10 +21,8 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 app.use(jwt.guard)
-// app.use(fileUpload())
 app.use('/public', express.static(`${__dirname}/../public`))
 
-app.use('/', require('./http')(services, repositories))
 app.use(errorHandler)
 
 module.exports = app
